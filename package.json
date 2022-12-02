@@ -4,7 +4,8 @@
     "description": "",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "day1": "ts-node --esm ./src/day1/index.ts"
+        "day1": "ts-node --esm ./src/day1/index.ts",
+        "day2": "ts-node --esm ./src/day2/index.ts"
     },
     "author": "me :)",
     "license": "ISC",
