@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 
 console.log("cheems");
 
-const input = await fs.readFile("input.txt", "utf-8");
+const input = await fs.readFile("src/day1/input.txt", "utf-8");
 const lines = input.split("\n");
 
 var sums: number[] = [];
