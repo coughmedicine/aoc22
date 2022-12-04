@@ -6,7 +6,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "day1": "ts-node --esm ./src/day1/index.ts",
         "day2": "ts-node --esm ./src/day2/index.ts",
-        "day3": "ts-node --esm ./src/day3/index.ts"
+        "day3": "ts-node --esm ./src/day3/index.ts",
+        "day4": "ts-node --esm ./src/day4/index.ts"
     },
     "author": "me :)",
     "license": "ISC",
