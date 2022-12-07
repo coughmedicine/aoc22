@@ -112,4 +112,3 @@ const findToDelete = (folder: Folder): number => {
 const tree = parseTerminal(lines);
 console.log(sumSmall(tree));
 console.log(findToDelete(tree));
-console.log(folderSize(tree));
