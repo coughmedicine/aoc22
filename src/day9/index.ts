@@ -12,57 +12,60 @@ type Vector = {
 type Direction = "U" | "D" | "R" | "L";
 
 class State {
-    headPos: Vector = { x: 0, y: 0 };
-    tailPos: Vector = { x: 0, y: 0 };
+    positions: Vector[];
     visited: Set<string> = new Set();
 
-    getDifference(): Vector {
+    constructor(length: number) {
+        this.positions = Array.from({ length }, () => {
+            return { x: 0, y: 0 };
+        });
+    }
+
+    getDifference(index: number): Vector {
         return {
-            x: this.headPos.x - this.tailPos.x,
-            y: this.headPos.y - this.tailPos.y,
+            x: this.positions[index].x - this.positions[index + 1].x,
+            y: this.positions[index].y - this.positions[index + 1].y,
         };
     }
 
-    getDistance(): number {
-        const diff = this.getDifference();
+    getDistance(index: number): number {
+        const diff = this.getDifference(index);
         return Math.max(Math.abs(diff.x), Math.abs(diff.y));
     }
 
     moveHeadOnce(dir: Direction) {
+        const headPos = this.positions[0];
         if (dir === "U") {
-            this.headPos.y++;
+            headPos.y++;
         }
         if (dir === "D") {
-            this.headPos.y--;
+            headPos.y--;
         }
         if (dir === "R") {
-            this.headPos.x++;
+            headPos.x++;
         }
         if (dir === "L") {
-            this.headPos.x--;
+            headPos.x--;
         }
-        if (this.getDistance() > 1) {
-            const diff = this.getDifference();
-            if (Math.abs(diff.y) === 2) {
-                if (dir === "D") {
-                    this.tailPos.y = this.headPos.y + 1;
-                }
-                if (dir === "U") {
-                    this.tailPos.y = this.headPos.y - 1;
-                }
-                this.tailPos.x = this.headPos.x;
-            } else if (Math.abs(diff.x) === 2) {
-                if (dir === "L") {
-                    this.tailPos.x = this.headPos.x + 1;
-                }
-                if (dir === "R") {
-                    this.tailPos.x = this.headPos.x - 1;
-                }
-                this.tailPos.y = this.headPos.y;
-            }
+
+        for (let i = 0; i < this.positions.length - 1; i++) {
+            this.followTail(i);
         }
-        this.visited.add(JSON.stringify(this.tailPos));
+
+        this.visited.add(
+            JSON.stringify(this.positions[this.positions.length - 1])
+        );
     }
+
+    followTail(index: number) {
+        if (this.getDistance(index) > 1) {
+            const diff = this.getDifference(index);
+            const tailPos = this.positions[index + 1];
+            tailPos.x += Math.sign(diff.x);
+            tailPos.y += Math.sign(diff.y);
+        }
+    }
+
     moveHead(direction: Direction, size: number) {
         for (let i = 0; i < size; i++) {
             this.moveHeadOnce(direction);
@@ -77,6 +80,6 @@ class State {
     }
 }
 
-const state = new State();
+const state = new State(10);
 state.doInstructions(instructions);
 console.log(state.visited.size);
