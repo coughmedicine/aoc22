@@ -1,34 +1,5 @@
 import fs from "node:fs/promises";
-//const input = await fs.readFile("src/day11/input.txt", "utf-8");
-
-const input = `Monkey 0:
-  Starting items: 79, 98
-  Operation: new = old * 19
-  Test: divisible by 23
-    If true: throw to monkey 2
-    If false: throw to monkey 3
-
-Monkey 1:
-  Starting items: 54, 65, 75, 74
-  Operation: new = old + 6
-  Test: divisible by 19
-    If true: throw to monkey 2
-    If false: throw to monkey 0
-
-Monkey 2:
-  Starting items: 79, 60, 97
-  Operation: new = old * old
-  Test: divisible by 13
-    If true: throw to monkey 1
-    If false: throw to monkey 3
-
-Monkey 3:
-  Starting items: 74
-  Operation: new = old + 3
-  Test: divisible by 17
-    If true: throw to monkey 0
-    If false: throw to monkey 1
-`;
+const input = await fs.readFile("src/day11/input.txt", "utf-8");
 
 const re = new RegExp(
     `Monkey (?<monkey>[0-9]):
@@ -67,10 +38,18 @@ class Monkey {
         this.ifFalse = ifFalse;
     }
 
-    inspectItem = (item: number): { nextMonkey: number; newItem: number } => {
+    inspectItem = (
+        item: number,
+        modulus: number
+    ): { nextMonkey: number; newItem: number } => {
         this.inspections += 1;
         let newItem = this.op(item);
-        newItem = Math.floor(newItem / (part2 ? 1 : 3));
+        if (part2) {
+            newItem %= modulus;
+        } else {
+            newItem = Math.floor(newItem / 3);
+        }
+
         if (newItem % this.testDiv === 0) {
             return { nextMonkey: this.ifTrue, newItem };
         } else {
@@ -78,18 +57,21 @@ class Monkey {
         }
     };
 
-    turn = (monkeys: Monkey[]) => {
+    turn = (monkeys: Monkey[], modulus: number) => {
         while (this.items.length !== 0) {
-            const { nextMonkey, newItem } = this.inspectItem(this.items[0]);
+            const { nextMonkey, newItem } = this.inspectItem(
+                this.items[0],
+                modulus
+            );
             this.items.shift();
             monkeys[nextMonkey].items.push(newItem);
         }
     };
 }
 
-const round = (monkeys: Monkey[]) => {
+const round = (monkeys: Monkey[], modulus: number) => {
     for (const monkey of monkeys) {
-        monkey.turn(monkeys);
+        monkey.turn(monkeys, modulus);
     }
 };
 
@@ -111,7 +93,6 @@ for (const match of input.matchAll(re)) {
         [key: string]: string;
     };
     const monkey = parseInt(groups.monkey);
-    console.log(groups.items.split(", "));
     const items = groups.items.split(", ").map((s) => parseInt(s));
     const operationString = groups.operation;
     const operation = createOperation(operationString);
@@ -124,10 +105,11 @@ for (const match of input.matchAll(re)) {
     );
 }
 
+const modulus = monkeys.map((m) => m.testDiv).reduce((a, b) => a * b);
+
 for (let i = 0; i < (part2 ? 10000 : 20); i++) {
-    round(monkeys);
+    round(monkeys, modulus);
 }
-console.log(monkeys);
 const inspections = monkeys.map((m) => m.inspections);
 inspections.sort((a, b) => b - a);
 console.log(inspections[0] * inspections[1]);
