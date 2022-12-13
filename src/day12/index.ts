@@ -106,7 +106,7 @@ for (const [y, line] of lines.entries()) {
     grid.push(toAdd);
 }
 
-const { dist, prev } = findPath(grid, end);
+const { dist } = findPath(grid, end);
 console.log(dist[start.y][start.x]);
 
 let minDist = Infinity;
