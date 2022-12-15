@@ -16,7 +16,8 @@
         "day10": "ts-node --esm ./src/day10/index.ts",
         "day11": "ts-node --esm ./src/day11/index.ts",
         "day12": "ts-node --esm ./src/day12/index.ts",
-        "day13": "ts-node --esm ./src/day13/index.ts"
+        "day13": "ts-node --esm ./src/day13/index.ts",
+        "day14": "ts-node --esm ./src/day14/index.ts"
     },
     "author": "me :)",
     "license": "ISC",
