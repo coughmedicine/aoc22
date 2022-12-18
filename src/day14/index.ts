@@ -13,12 +13,14 @@ type Vector = {
     x: number;
     y: number;
 };
+
 type Bounds = {
     minRow: number;
     maxRow: number;
     minCol: number;
     maxCol: number;
 };
+
 const isSolid = (grid: Grid, vector: Vector, bottom: number) => {
     if (vector.y in grid) {
         if (vector.x in grid[vector.y]) {
